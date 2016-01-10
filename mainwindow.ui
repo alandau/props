@@ -20,19 +20,6 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <widget class="QTableView" name="listingTable">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>541</width>
-      <height>181</height>
-     </rect>
-    </property>
-    <property name="showGrid">
-     <bool>false</bool>
-    </property>
-   </widget>
    <widget class="QListing" name="listingView" native="true">
     <property name="geometry">
      <rect>

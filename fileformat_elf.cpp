@@ -401,5 +401,4 @@ void ELFFileFormat::disassemble(ListingIface& listing, Symtab& symtab) {
             }
         }
     }
-//    listing.recalculate();
 }

@@ -12,14 +12,12 @@ public:
         std::string hex;
         std::string instruction;
         std::string instructionComment;
-        uint32_t row;
         uint8_t length;
     };
 
     virtual void addSegment(uint64_t vaddr, uint64_t memsz, const uint8_t* data, uint64_t filesz) = 0;
     virtual void addAddress(uint64_t address, Data&& data) = 0;
     virtual void addBranch(uint64_t from, uint64_t to) = 0;
-    virtual void recalculate() = 0;
 };
 
 class Symtab {

@@ -69,6 +69,7 @@ public:
             new (&u.t) T(std::move(other.u.t));
             other.reset();
         }
+        return *this;
     }
 
     void reset() {
