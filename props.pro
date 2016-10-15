@@ -7,6 +7,8 @@
 QT       += core gui
 CONFIG += c++11
 
+QMAKE_CXXFLAGS_WARN_ON = -Wall -Wno-pointer-arith -Wno-sign-compare
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = props
@@ -17,7 +19,8 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     fileformat_elf.cpp \
     listing.cpp \
-    qlisting.cpp
+    qlisting.cpp \
+    optional.cpp
 
 HEADERS  += mainwindow.h \
     elf.h \

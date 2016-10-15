@@ -21,18 +21,27 @@ public:
         }
     };
 
+    struct Branch {
+        uint64_t addr;
+        bool conditional;
+    };
+
     Listing(Symtab& symtab);
     void addAddress(uint64_t address, Data&& data) override;
     void addSegment(uint64_t vaddr, uint64_t memsz, const uint8_t* data, uint64_t filesz) override;
-    void addBranch(uint64_t from, uint64_t to) override;
+    void addBranch(uint64_t from, uint64_t to, bool conditional) override;
     Data getData(uint64_t address) const;
+    Data& getDataRef(uint64_t address) override;
     const std::vector<Segment>& getSegments() const;
-    Optional<uint64_t> getBranch(uint64_t from) const;
+    Optional<Branch> getBranchFrom(uint64_t from) const;
+    std::vector<Branch> getBranchesTo(uint64_t to) const;
+    iterator begin() override;
+    iterator end() override;
 private:
     std::vector<Segment> segments_;
     std::map<uint64_t, Data> listing_;
-    std::map<uint64_t, uint64_t> branches_;
-    std::map<uint64_t, uint64_t> revbranches_;
+    std::map<uint64_t, Branch> branches_;
+    std::multimap<uint64_t, Branch> revbranches_;
     Symtab& symtab_;
 };
 

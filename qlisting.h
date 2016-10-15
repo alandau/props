@@ -51,7 +51,7 @@ private:
     const Symtab* symtab_ = nullptr;
     const Listing::Segment* segment_;
     std::vector<LineInfo> lines_;
-    std::map<uint64_t, int> addrToLine_;
+    std::map<uint64_t, std::pair<int,int>> addrToLine_;
 
     int pxCharWidth_, pxCharHeight_;
     int pxAddrWidth_;
@@ -60,8 +60,11 @@ private:
     QColor regularColor_ = Qt::black;
     QColor labelColor_ = Qt::darkMagenta;
     QColor commentColor_ = Qt::darkGreen;
+    std::vector<QColor> arrowColors_ = {Qt::blue, Qt::green, Qt::red, Qt::magenta, Qt::cyan, Qt::gray, Qt::black, Qt::darkYellow};
 
     void calculate();
+    void drawRefline(QPainter& painter, int row1, int row2, int indent, int x, QColor color, bool conditional);
+    void drawArrow(QPainter& painter, int line, int x, Qt::ArrowType arrowType);
 
 private slots:
     void adjust();

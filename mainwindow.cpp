@@ -15,18 +15,24 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui_(new Ui::MainWindow)
-    , filename_("/bin/true")
+    , filename_(qApp->arguments().size() == 2 ? qApp->arguments().at(1) : "/bin/true")
     , file_(filename_)
     , listing_(symtab_)
 {
     ui_->setupUi(this);
+    setWindowTitle(windowTitle() + " - " + filename_);
     setCentralWidget(ui_->listingView);
 
     parseElfHeader();
 
+    fileFormat_->loadSymbols(symtab_);
+    uint64_t entryPoint = fileFormat_->getMetadata().entryPoint;
+    symtab_.insert(entryPoint, "entry");
     fileFormat_->disassemble(listing_, symtab_);
+    fileFormat_->findFeatures(listing_, symtab_);
+    fileFormat_->recalcCommentsAfterSymtabChange(listing_, symtab_);
     ui_->listingView->setData(&listing_, &symtab_);
-    ui_->listingView->scrollToAddress(fileFormat_->getMetadata().entryPoint);
+    ui_->listingView->scrollToAddress(entryPoint);
 }
 
 void MainWindow::parseElfHeader() {

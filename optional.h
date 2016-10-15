@@ -2,6 +2,7 @@
 #define OPTIONAL_H
 
 #include <assert.h>
+#include <utility>
 
 namespace detail {
 
@@ -103,9 +104,21 @@ public:
         return present;
     }
 
+    T& operator *() {
+        assert(present);
+        return u.t;
+    }
+
+    T* operator ->() {
+        assert(present);
+        return &u.t;
+    }
+
 private:
-    union {
+    union U {
         T t;
+        U() {}
+        ~U() {}
     } u;
     bool present;
 };
@@ -113,7 +126,7 @@ private:
 template<>
 class Optional<void> {
 public:
-    static const constexpr detail::AbsentType absent = nullptr;
+    static constexpr detail::AbsentType absent = nullptr;
 
     template <class T, class Opt = Optional<typename std::decay<T>::type>>
     static Opt from(T&& t) {

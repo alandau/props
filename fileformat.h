@@ -23,7 +23,9 @@ public:
 
     virtual Metadata getMetadata() = 0;
     virtual void disassemble(ListingIface& listing, Symtab& symtab) = 0;
-
+    virtual void loadSymbols(Symtab& symtab) = 0;
+    virtual void recalcCommentsAfterSymtabChange(ListingIface& listing, const Symtab& symtab) = 0;
+    virtual void findFeatures(ListingIface& listing, Symtab& symtab) = 0;
 protected:
     const void* data_;
     size_t size_;

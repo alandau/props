@@ -8,10 +8,6 @@ Listing::Listing(Symtab& symtab)
 }
 
 void Listing::addAddress(uint64_t address, Data&& data) {
-    if (address == 0x401400) {
-        data.instructionComment = "haha";
-        data.comments = {"line 1", "line 2"};
-    }
     listing_.insert(std::make_pair(address, std::move(data)));
 }
 
@@ -36,12 +32,35 @@ const std::vector<Listing::Segment>& Listing::getSegments() const {
     return segments_;
 }
 
-void Listing::addBranch(uint64_t from, uint64_t to) {
-    branches_[from] = to;
-    revbranches_[to] = from;
+void Listing::addBranch(uint64_t from, uint64_t to, bool conditional) {
+    branches_[from] = {to, conditional};
+    revbranches_.insert(std::make_pair(to, Branch{from, conditional}));
 }
 
-Optional<uint64_t> Listing::getBranch(uint64_t from) const {
+Optional<Listing::Branch> Listing::getBranchFrom(uint64_t from) const {
     auto it = branches_.find(from);
-    return it == branches_.end() ? Optional<uint64_t>() : Optional<uint64_t>(it->second);
+    return it == branches_.end() ? Optional<Branch>() : Optional<Branch>(it->second);
+}
+
+std::vector<Listing::Branch> Listing::getBranchesTo(uint64_t to) const {
+    auto range = revbranches_.equal_range(to);
+    std::vector<Branch> res;
+    for (auto it = range.first; it != range.second; ++it) {
+        res.push_back(it->second);
+    }
+    return res;
+}
+
+ListingIface::Data& Listing::getDataRef(uint64_t address) {
+    auto it = listing_.find(address);
+    assert(it != listing_.end());
+    return it->second;
+}
+
+ListingIface::iterator Listing::begin() {
+    return listing_.begin();
+}
+
+ListingIface::iterator Listing::end() {
+    return listing_.end();
 }
